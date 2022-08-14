@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
         Player.GetComponent<TrailRenderer>().enabled = false;
         Player.GetComponent<MeshRenderer>().enabled = false;
         Player.GetComponent<SphereCollider>().enabled = false;
-        if ( SceneManager.GetActiveScene().name == "scene3")
+        if ( SceneManager.GetActiveScene().name == "scene2")
         {
             StartCoroutine(EndGame());
         }

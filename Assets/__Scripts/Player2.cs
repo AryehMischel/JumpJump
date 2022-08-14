@@ -120,33 +120,7 @@ public  class Player2 : MonoBehaviour
     }
 
   
-
-    private void StopStoppingObject()
-    { 
-       //Debug.Log("stopping...");
-       // StopCoroutine(SlowRoutine);
-    }
-
-    /*IEnumerator SlowDown()
-    {
-        float timeToStart = Time.time;
-        float Speed = SlowDownSpeed;
-        if (!isGrounded)
-        {
-            Speed /= 2;
-        }
-        float initm = movement;
-        
-        while(Mathf.Abs(movement) > 0.0f)
-        {
-            movement = Mathf.Lerp(initm, 0, (Time.time - timeToStart ) * Speed ); 
-         
-            yield return null;
-        }
-
-        controlled = false;
-
-    }*/
+    
 
     private void FixedUpdate()
     {
@@ -156,6 +130,7 @@ public  class Player2 : MonoBehaviour
             Slowing = false;
             AddForceXAxis = 0;
         }
+        
         if (Slowing)
         {
           
@@ -190,16 +165,7 @@ public  class Player2 : MonoBehaviour
                 rb.velocity = new Vector3((movement * MovementSpeed) + AddForceXAxis, rb.velocity.y);
             }
         }
-        else
-        {
-            
-            /*
-            if (rb.velocity.x > 0.1 || AddForceXAxis > 0)
-            {
-                rb.velocity = new Vector3(rb.velocity.x + (AddForceXAxis / divisor), rb.velocity.y, rb.velocity.z);
 
-            }*/
-        }
 
         if (diving)
         {
@@ -218,8 +184,8 @@ public  class Player2 : MonoBehaviour
     private void OnDisable() => controls.Disable();
 
 
-[ContextMenu("showv")]
-    private void checkv()
+    [ContextMenu("showv")]
+    private void logVelocityX()
     {
         Debug.Log(rb.velocity.x);
     }
@@ -229,16 +195,11 @@ public  class Player2 : MonoBehaviour
         
         if ( isGrounded | secondJump)
         {
-            // rb.velocity += new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
-            // rb.AddForce( new Vector3(x * 30, 0 , 0), ForceMode.Impulse);
-            // rb.velocity = new Vector2(rb.velocity.x, JumpStrength);
-            // var x = rb.velocity.x;
-            // rb.AddForce(force, ForceMode.Impulse);
-            //rb.AddForce(force, ForceMode.Impulse);
+          
            Vector3 force = new Vector3(0,  JumpStrength);
            rb.AddForce(force, ForceMode.Impulse);
            Debug.Log(rb.velocity);
-           if (firstJump)
+             if (firstJump)
             {
                 firstJump = false; 
             }
@@ -268,10 +229,6 @@ public  class Player2 : MonoBehaviour
         firstJump = true;
         secondJump = true;
         
-        /*if (collision.gameObject.CompareTag("floor"))
-        {
-           SetStateGround();
-        }*/
 
         if (collision.gameObject.CompareTag("sticky"))
         {
@@ -295,10 +252,7 @@ public  class Player2 : MonoBehaviour
         {
             isGrounded = false;
         }
-
-        /*if (collision.gameObject.CompareTag("floor"))
-        {
-        }*/
+        
         
         if (collision.gameObject.CompareTag("sticky"))
         {
@@ -328,13 +282,7 @@ public  class Player2 : MonoBehaviour
     private void respawn()
     {
         StartCoroutine(respawnco());
-        /*this.GetComponent<MeshRenderer>().enabled = false;
-        
-        this.GetComponent<ParticleSystem>().Play();
-        this.transform.DOMove(SpawnPosition, 0.3f).OnComplete(() =>
-        {
-            this.GetComponent<MeshRenderer>().enabled = true;            
-        });*/
+
     }
 
     IEnumerator respawnco()

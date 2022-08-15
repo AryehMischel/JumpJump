@@ -48,84 +48,54 @@ public  class Player2 : MonoBehaviour
         controls.Player.Jump.canceled += _ => JumpCanceled = true; 
         controls.Player.Dive.started  += _ => diving = true;
         controls.Player.Dive.canceled += _ => diving = false;
-        
-  
-        
-        
         JumpStrength = PlayerData.Jump;
-        //bad logic but proof of concept
-
         controls.Player.Movement.performed += _ => controlled = true;
-
         if (PlayerData.GhostMode == true)
         {
             controls.Player.Boost.started += _ => GhostMode(); 
-            controls.Player.Boost.canceled += _ => OffLeap();
+            controls.Player.Boost.canceled += _ => NormalMode();
             if (SceneManager.GetActiveScene().name == "scene1")
             {
                 GameObject.FindGameObjectWithTag("GhostUI").GetComponent<Canvas>().enabled = true;
             }
         }
 
-        
-       // controls.Player.Jump.performed += _ => controlled = true;
-
     }
 
     
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("triggered!");
         intersecting = true;
     }
     
     private void OnTriggerExit(Collider other)
     {
         intersecting = false;
-        Debug.Log("exited trigger");
         if(ghosting is false & intersecting is false)
             this.transform.gameObject.layer = 8;
-            Debug.Log("offcollider");
     }
     
-    
-    [ContextMenu("Leap Frog")]
-    public void LeapFrog()
-    {
-      //  controls.Player.Boost.started += _ => Debug.Log("boosting");
-  
-      PlayerData.GhostMode = true;
-
-    }
-
     public void GhostMode()
     {
         this.transform.gameObject.layer = 9;
         ghosting = true;
     }
 
-    public void OffLeap()
+    public void NormalMode()
     {
         ghosting = false;
         if(ghosting is false & intersecting is false)
             this.transform.gameObject.layer = 8;
-
     }
     private void StopObject()
     {
-        //SlowRoutine =  StartCoroutine(SlowDown());
-        ///movement = 0;
         controlled = false;
         movement = 0;
     }
-
-  
-    
-
     private void FixedUpdate()
     {
 
-        if (movement < 0 & !intersecting) //and not intersecting with 
+        if (movement < 0 & !intersecting) 
         {
             Slowing = false;
             AddForceXAxis = 0;
@@ -144,8 +114,6 @@ public  class Player2 : MonoBehaviour
                 Slowing = false;
             }
         }
-        
-
         
         if(JumpCanceled & rb.velocity.y > 0)
         {
@@ -171,13 +139,7 @@ public  class Player2 : MonoBehaviour
         {
             dive();
         }
-
-
-     
-     
-
-
-
+        
     }
 
     private void OnEnable() => controls.Enable();
@@ -192,21 +154,19 @@ public  class Player2 : MonoBehaviour
 
     private void jump()
     {
-        
         if ( isGrounded | secondJump)
         {
-          
            Vector3 force = new Vector3(0,  JumpStrength);
            rb.AddForce(force, ForceMode.Impulse);
            Debug.Log(rb.velocity);
-             if (firstJump)
-            {
-                firstJump = false; 
-            }
-            else
-            {
-                secondJump = false;
-            }
+           if(firstJump)
+           { 
+            firstJump = false; 
+           }
+           else
+           {
+            secondJump = false;
+           }
         }
     }
 
@@ -253,7 +213,6 @@ public  class Player2 : MonoBehaviour
             isGrounded = false;
         }
         
-        
         if (collision.gameObject.CompareTag("sticky"))
         {
             JumpStrength /= 3;
@@ -282,7 +241,6 @@ public  class Player2 : MonoBehaviour
     private void respawn()
     {
         StartCoroutine(respawnco());
-
     }
 
     IEnumerator respawnco()
@@ -293,12 +251,10 @@ public  class Player2 : MonoBehaviour
         
         yield return new WaitForSeconds(1f);
         
-        
         this.transform.DOMove(SpawnPosition, 0.3f).OnComplete(() =>
         {
             this.GetComponent<MeshRenderer>().enabled = true;
             rb.isKinematic = false;
-
         });
     }
 }
